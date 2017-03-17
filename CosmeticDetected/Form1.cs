@@ -316,6 +316,7 @@ namespace CosmeticDetected
             catch
             {
                 Console.WriteLine(e.ToString());
+                Console.WriteLine("1123");
             }
         }
 
