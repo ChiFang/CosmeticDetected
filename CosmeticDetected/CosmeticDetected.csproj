@@ -163,6 +163,7 @@
     <Content Include="NeptuneC_MD_VC90.dll" />
     <Content Include="NeptuneGigE.dll" />
     <Content Include="NeptuneUSB3.dll" />
+    <Content Include="simple_grabber.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

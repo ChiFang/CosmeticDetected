@@ -26,6 +26,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using CosmeticImiTechCamera;
 using System.Drawing.Imaging;
 
+
 namespace CosmeticDetected
 {
     public partial class Form1 : Form
@@ -184,11 +185,22 @@ namespace CosmeticDetected
         byte BS;
         string temp_text = "";
         //**************************************
+        [DllImport("simple_grabber.dll")]
+        static extern Point point_add(Point aa , Point bb);
 
+        Point tt1, tt2, tt3;
         public Form1()
         {
             InitializeComponent();
+            tt1.X = 10;
+            tt1.X = 20; 
+
+            tt2.X = 30;
+            tt2.X = 40;
+            tt3 = point_add(tt1, tt2);
             //Camera1.ImiTechCamera();
+
+            //simple_grabber;
         }
 
 
