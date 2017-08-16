@@ -17,6 +17,8 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Features2D;
 using Emgu.CV.XFeatures2D;
 using Emgu.Util;
+using System.IO;
+using System.Net;
 
 using TsRemoteLib;
 using ToshibaTools;
@@ -65,8 +67,8 @@ namespace CosmeticDetected
         Point[] Record_Points_Mechanical_Arm;
         //Point[] Record_Points_Mechanical_Arm_All;
 
-        PointF[] Record_Points_ImageF_All;
-        PointF[] Record_Points_Mechanical_ArmF_All;
+        /*PointF[] Record_Points_ImageF_All;
+        PointF[] Record_Points_Mechanical_ArmF_All;*/
 
         VectorOfPoint Record_Points_Image_All_VOP = new VectorOfPoint();    //原始影像特徵點位
         VectorOfPoint Record_Points_Mechanical_Arm_All_VOP = new VectorOfPoint();    //原始影像特徵點位
@@ -185,19 +187,31 @@ namespace CosmeticDetected
         byte BS;
         string temp_text = "";
         //**************************************
-        [DllImport("simple_grabber.dll")]
-        static extern Point point_add(Point aa , Point bb);
 
-        Point tt1, tt2, tt3;
+
+        private ObjectPLC_KV obj_PLC;
+        /*[DllImport("simple_grabber.dll")]
+        static extern Point point_add(Point aa , Point bb);*/
+        int Servo_On_Off_MR_2, Conveyor_Forward_Backward_MR_5001, Conveyor_Move_Stop_MR_3;
+        //Point tt1, tt2, tt3;
         public Form1()
         {
             InitializeComponent();
-            tt1.X = 10;
+            obj_PLC = new ObjectPLC_KV();
+            obj_PLC.axDBCommManager = axDBCommManager1;
+            
+
+
+            
+
+
+
+            /*tt1.X = 10;
             tt1.X = 20; 
 
             tt2.X = 30;
             tt2.X = 40;
-            tt3 = point_add(tt1, tt2);
+            tt3 = point_add(tt1, tt2);*/
             //Camera1.ImiTechCamera();
 
             //simple_grabber;
@@ -294,6 +308,9 @@ namespace CosmeticDetected
                 label22.Text = "下降高度位置：" + DownLocalVal.ToString();
                 label23.Text = "定位高度位置：" + PositionLocalVal.ToString();
             }
+
+
+            
         }
 
         //關閉程式後
@@ -338,7 +355,10 @@ namespace CosmeticDetected
             }
         }
 
-        TsPointS Pount5, Pount1, Pount2, Pount3, Pount4;
+        TsPointS Pount1, Pount2, Pount3, Pount4, Pount5, Pount6, Pount7;
+
+        int Shift_Point_Count_X = 0;
+        int Shift_Point_Count_Y = -5;
         private void Process_Click(object sender, EventArgs e)
         {
             if (Process.Text == "執行跑點")
@@ -348,12 +368,14 @@ namespace CosmeticDetected
                     MessageBox.Show("機械手臂尚未連線");
                     return;
                 }
-                Pount5 = new TsPointS();
+                
                 Pount1 = new TsPointS();
                 Pount2 = new TsPointS();
                 Pount3 = new TsPointS();
                 Pount4 = new TsPointS();
-
+                Pount5 = new TsPointS();
+                Pount6 = new TsPointS();
+                Pount7 = new TsPointS();
 
                 //大手臂
                 /*
@@ -389,49 +411,64 @@ namespace CosmeticDetected
 
 
                 //小手臂
-                Pount5.X = -25;
-                Pount5.Y = 200;
-                Pount5.Z = 155;
+                Pount5.X = 220;
+                Pount5.Y = 70;
+                Pount5.Z = 140;
                 Pount5.C = 0;
 
-                Pount1.X = -25;
-                Pount1.Y = 200;
-                Pount1.Z = 155;
+                Pount1.X = 220;
+                Pount1.Y = 70;
+                Pount1.Z = 133;
                 Pount1.C = 0;
 
-                Pount2.X = -15;
-                Pount2.Y = 250;
+                //Pount2.X = -15;//+10
+                Pount2.X = 270 + (Shift_Point_Count_X);//+10
+                Pount2.Y = 70 + (Shift_Point_Count_Y);
                 //Pount2.Y = -50;
-                Pount2.Z = 155;
+                Pount2.Z = 133;
                 Pount2.C = 0;
 
-                
 
-
-                Pount3.X = 45;
-                Pount3.Y = 250;
+                //Pount3.X = 45;//+20
+                Pount3.X = 270 + (Shift_Point_Count_X * 2); //+20
+                Pount3.Y = 20 + (Shift_Point_Count_Y * 2); ;
                 //Pount3.Y = -50;
-                Pount3.Z = 155;
+                Pount3.Z = 133;
                 Pount3.C = 0;
 
 
-                Pount4.X = 55;
-                Pount4.Y = 200;
+                //Pount4.X = 55;//+30
+                Pount4.X = 220 + (Shift_Point_Count_X * 3);//+30
+                Pount4.Y = 20+ (Shift_Point_Count_Y * 3);
                 //Pount4.Y = -150;
-                Pount4.Z = 155;
+                Pount4.Z = 133;
                 Pount4.C = 0;
 
+                //Pount6.X = 25;//+40
+                Pount6.X = 220 + (Shift_Point_Count_X * 4); ;//+40
+                Pount6.Y = 70 + (Shift_Point_Count_Y * 4);
+                Pount6.Z = 133;
+                Pount6.C = 0;
+
+                //Pount7.X = 25;//+40
+                Pount7.X = 220 + (Shift_Point_Count_X * 4); ;//+40
+                Pount7.Y = 70 + (Shift_Point_Count_Y * 4);
+                Pount7.Z = 140;
+                Pount7.C = 0;
+
                 //public void SetGlobalPOINT(string name, int restore, TsPointS point);
 
                 //public void SetGlobalPOINT(string name, int restore, TsPointS point);
-                
-                TsRemote._Robot.SetGlobalINT("UNDERTF", 0, 1);
+
+                //TsRemote._Robot.SetGlobalINT("UNDERTF", 0, 1);
 
                 TsRemote._Robot.SetGlobalPOINT("UNDER(5)", 0, Pount5);
                 TsRemote._Robot.SetGlobalPOINT("UNDER(1)", 0, Pount1);
                 TsRemote._Robot.SetGlobalPOINT("UNDER(2)", 0, Pount2);
                 TsRemote._Robot.SetGlobalPOINT("UNDER(3)", 0, Pount4);
                 TsRemote._Robot.SetGlobalPOINT("UNDER(4)", 0, Pount3);
+                TsRemote._Robot.SetGlobalPOINT("UNDER(6)", 0, Pount6);
+                TsRemote._Robot.SetGlobalPOINT("UNDER(7)", 0, Pount7);
 
                 TsRemote._Robot.SetGlobalINT("UNDERTF", 0, 1);
 
@@ -1199,7 +1236,6 @@ namespace CosmeticDetected
             double MoveX = 0;
             double MoveY = 0;
 
-
             if (StartImgP.X <= Img_center.X && StartImgP.Y <= Img_center.Y)
             {
                 MoveX = 10.0;
@@ -1261,7 +1297,6 @@ namespace CosmeticDetected
                 //MoveToImgCenter.Enabled = true;
             }
 
-
             //計算位移量
             //??????
             ConvertCoordinate.ImgCovtoArm((Img_center.X - Camera1.AnchorPosition.X), (Img_center.Y - Camera1.AnchorPosition.Y), out shiftX, out shiftY);
@@ -1292,9 +1327,7 @@ namespace CosmeticDetected
             double StartX = ArmPoint.X;
             double StartY = ArmPoint.Y;
 
-
             ConvertCoordinate.ImgCovtoArm((Img_center.X - StartPoint.X), (Img_center.Y - StartPoint.Y), out shiftX, out shiftY);
-
 
             LinearMove(shiftX, shiftY);
 
@@ -1316,7 +1349,6 @@ namespace CosmeticDetected
                 label6.Text = "手臂軸心位置：(" + AxisX.ToString() + "," + AxisX.ToString() + ")";
                 label7.Text = "影像軸心位置：(" + AxisImgPos.X.ToString() + "," + AxisImgPos.Y.ToString() + ")";
             }
-
 
             double angXY = ConvertCoordinate.ImgToArmAngle((EndX - StartX), (EndY - StartY), (EndPoint.X - StartPoint.X), (EndPoint.Y - StartPoint.Y));
             record(record_a, shiftX, (EndX - StartX), shiftY, (EndY - StartY), (Img_center.X - StartPoint.X), (EndPoint.X - StartPoint.X), (Img_center.Y - StartPoint.Y), (EndPoint.Y - StartPoint.Y), angXY);
@@ -1359,8 +1391,6 @@ namespace CosmeticDetected
             PointF NowPoint;
             PointF ImgStart;
             PointF ImgEnd;
-
-
 
             //如果標靶未在影像中心，移到影像中心
             IsAnchorPositionMode = Camera1.GetAnchorPosition(out NowPoint);
@@ -2242,8 +2272,6 @@ namespace CosmeticDetected
         int ImageLoad = 0;
         int AnalysisImage = 0;
 
-
-
         int image_CountX1_ALL, image_CountY1_ALL;
         int image_CountX1, image_CountY1;   //原始影像特徵點(求斜率用)
         int image_CountX1_Rotate, image_CountY1_Rotate;   //原始影像特徵點(求斜率用)(旋轉後)
@@ -2462,7 +2490,6 @@ namespace CosmeticDetected
                 Original_Src_Image[0].Save("C:\\Users\\Public\\Pictures\\Sample Pictures\\新增資料夾\\Model_H.bmp");
                 imageBox1.Image = Original_Src_Image[0];
                 Display_Img.Image = Original_Src_Image[0];
- 
             }
 
             Original_Image = new Image<Bgr, byte>("C:\\Users\\Public\\Pictures\\Sample Pictures\\新增資料夾\\Model_H.bmp");
@@ -2704,7 +2731,6 @@ namespace CosmeticDetected
             cannyImageBox.Visible = true;
             //pictureBox1.Visible = true;
 
-
             if (Use_Perspective_Transform == true)
             {
                 Matrix<float> c1 = new Matrix<float>(srcp);
@@ -2739,7 +2765,6 @@ namespace CosmeticDetected
                 Take_Dst_Image = Take_Image_Gray.Mat.Split();
                 //Take_Dst_Image[0].Save("C:\\Users\\Public\\Pictures\\Sample Pictures\\新增資料夾\\Dest_H.bmp");
                 Display_Img.Image = Take_Dst_Image[0];
- 
             }
            
             //Original_Src_Image;
@@ -4006,6 +4031,136 @@ namespace CosmeticDetected
             return inputImage;
         }
 
+        //輸送帶控制
+        private void btn_Conveyor_Servo_On_Off_Click(object sender, EventArgs e)
+        {
+            if (btn_Conveyor_Servo_On_Off.Text == "Servo On")
+            {
+                obj_PLC.doWriteDevice(DATABUILDERAXLibLB.DBPlcDevice.DKV3000_MR, "2", 1);    //寫入MR Servo On
+                btn_Conveyor_Servo_On_Off.Text = "Servo Off";
+                btn_Conveyor_Servo_On_Off.BackColor = Color.Red;
+            }
+            else if (btn_Conveyor_Servo_On_Off.Text == "Servo Off")
+            {
+                obj_PLC.doWriteDevice(DATABUILDERAXLibLB.DBPlcDevice.DKV3000_MR, "2", 0);    //寫入MR Servo Off
+                btn_Conveyor_Servo_On_Off.Text = "Servo On";
+                btn_Conveyor_Servo_On_Off.BackColor = Color.Transparent;
+            }
+        }
+
+        private void btn_Connect_Click(object sender, EventArgs e)
+        {
+            if (obj_PLC.checkConnect(true, false) == true)
+            {
+                //連線成功 將按鈕斷線及寫入開啟 連線則關閉
+                /*btnConnect.Enabled = false;
+                btnDisConnect.Enabled = true;
+                btnSend.Enabled = true;*/
+                Servo_On_Off_MR_2 = obj_PLC.doReadDevice(DATABUILDERAXLibLB.DBPlcDevice.DKV3000_MR, "2"); //讀取MR2 Servo_On_Off
+                Conveyor_Forward_Backward_MR_5001 = obj_PLC.doReadDevice(DATABUILDERAXLibLB.DBPlcDevice.DKV3000_MR, "5001"); //讀取MR5001 輸送帶正轉或反轉
+                Conveyor_Move_Stop_MR_3 = obj_PLC.doReadDevice(DATABUILDERAXLibLB.DBPlcDevice.DKV3000_MR, "3"); //讀取MR3 輸送帶移動或停止
+
+                if (Servo_On_Off_MR_2 >= 1)
+                {
+                    btn_Conveyor_Servo_On_Off.Text = "Servo Off";
+                    btn_Conveyor_Servo_On_Off.BackColor = Color.Red;
+                }
+
+                if (Conveyor_Forward_Backward_MR_5001 >= 1)
+                {
+                    btn_Conveyor_Forward_Backward.Text = "切換：後退";
+                }
+                else
+                {
+                    btn_Conveyor_Forward_Backward.Text = "切換：前進";
+                }
+
+                if (Conveyor_Move_Stop_MR_3 >= 1)
+                {
+                    btn_Conveyor_Move_Stop.Text = "停止";
+                    btn_Conveyor_Move_Stop.BackColor = Color.Red;
+                }
+
+                //MessageBox.Show("已連線");
+                return;
+            }
+            else
+            {
+                //未連線，進行連線
+                if (obj_PLC.doMoniter() == false)
+                {
+                    //Now_Second_Five_Seconds_Interval = System.DateTime.Now.AddSeconds(5).Second;//五秒後要更改系統狀態
+                    //lab_Progress.Text = "PLC連線失敗";
+
+                    return;
+                }
+                //連線成功 將按鈕斷線及寫入開啟 連線則關閉
+                /*btnConnect.Enabled = false;
+                btnDisConnect.Enabled = true;
+                btnSend.Enabled = true;*/
+
+                Servo_On_Off_MR_2 = obj_PLC.doReadDevice(DATABUILDERAXLibLB.DBPlcDevice.DKV3000_MR, "2"); //讀取MR2 Servo_On_Off
+                Conveyor_Forward_Backward_MR_5001 = obj_PLC.doReadDevice(DATABUILDERAXLibLB.DBPlcDevice.DKV3000_MR, "5001"); //讀取MR5001 輸送帶正轉或反轉
+                Conveyor_Move_Stop_MR_3 = obj_PLC.doReadDevice(DATABUILDERAXLibLB.DBPlcDevice.DKV3000_MR, "3"); //讀取MR3 輸送帶移動或停止
+
+                if (Servo_On_Off_MR_2 >= 1)
+                {
+                    btn_Conveyor_Servo_On_Off.Text = "Servo Off";
+                    btn_Conveyor_Servo_On_Off.BackColor = Color.Red;
+                }
+
+                if (Conveyor_Forward_Backward_MR_5001 >= 1)
+                {
+                    btn_Conveyor_Forward_Backward.Text = "切換：後退";
+                }
+                else
+                {
+                    btn_Conveyor_Forward_Backward.Text = "切換：前進";
+                }
+
+                if (Conveyor_Move_Stop_MR_3 >= 1)
+                {
+                    btn_Conveyor_Move_Stop.Text = "停止";
+                    btn_Conveyor_Move_Stop.BackColor = Color.Red;
+                }
+            }
+        }
+
+        private void btn_Conveyor_Forward_Backward_Click(object sender, EventArgs e)
+        {
+            if (btn_Conveyor_Forward_Backward.Text == "切換：前進")
+            {  
+                obj_PLC.doWriteDevice(DATABUILDERAXLibLB.DBPlcDevice.DKV3000_MR, "5001", 0);    //寫入MR 前進
+                btn_Conveyor_Forward_Backward.Text = "切換：後退";
+            }
+            else if (btn_Conveyor_Forward_Backward.Text == "切換：後退")
+            {
+                obj_PLC.doWriteDevice(DATABUILDERAXLibLB.DBPlcDevice.DKV3000_MR, "5001", 1);    //寫入MR 後退
+                btn_Conveyor_Forward_Backward.Text = "切換：前進";  
+            }
+        }
+
+        private void btn_Conveyor_Move_Stop_Click(object sender, EventArgs e)
+        {
+            if (btn_Conveyor_Move_Stop.Text == "移動")
+            {
+                //PN301改速度
+                obj_PLC.doWriteDevice(DATABUILDERAXLibLB.DBPlcDevice.DKV3000_MR, "3", 1);    //寫入MR 移動
+                obj_PLC.doWriteDevice(DATABUILDERAXLibLB.DBPlcDevice.DKV3000_MR, "4", 1);    //寫入MR 移動
+                btn_Conveyor_Move_Stop.Text = "停止";
+                btn_Conveyor_Move_Stop.BackColor = Color.Red;
+            }
+            else if (btn_Conveyor_Move_Stop.Text == "停止")
+            {
+                obj_PLC.doWriteDevice(DATABUILDERAXLibLB.DBPlcDevice.DKV3000_MR, "3", 0);    //寫入MR 停止
+                obj_PLC.doWriteDevice(DATABUILDERAXLibLB.DBPlcDevice.DKV3000_MR, "4", 0);    //寫入MR 移動
+                btn_Conveyor_Move_Stop.Text = "移動";
+                btn_Conveyor_Move_Stop.BackColor = Color.Transparent;
+            }
+        }
+        //輸送帶控制
+
+
         //取得點位按鈕
         private void btn_Get_Point_Click(object sender, EventArgs e)
         {
@@ -4026,7 +4181,6 @@ namespace CosmeticDetected
                 
                 imageBox_Point.Image = Original_Image_Gray_Point;
 
-                
                 Get_Point_YN = 1;
                 btn_Get_Point.Text = "結束取點";
                 btn_Get_Point.BackColor = Color.Red;
@@ -4166,18 +4320,15 @@ namespace CosmeticDetected
                                 {
                                     //Console.WriteLine(string.Format("observedKeyPoints: {0}", observedKeyPoints[e.TrainIdx].Point));
                                 }
-                                
                                 abcd++;
                             }
                             else if (abcd == 1)
                             {
                                 //Console.WriteLine(string.Format("modelKeyPoints: {0}", modelKeyPoints[e.TrainIdx].Point));
                             }
-                        }
-                        
+                        }                      
                     }        
                     //Console.WriteLine("-----------------------"+i);
-
                 }
                 //Console.WriteLine(CorrectModelKeyPoints.ToString());
 

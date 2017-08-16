@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.Display_Img = new Emgu.CV.UI.ImageBox();
             this.Process = new System.Windows.Forms.Button();
             this.Search_Camera = new System.Windows.Forms.Button();
@@ -158,6 +159,12 @@
             this.btn_Get_Point = new System.Windows.Forms.Button();
             this.btn_Click_Move = new System.Windows.Forms.Button();
             this.imageBox_Point = new Emgu.CV.UI.ImageBox();
+            this.btn_Conveyor_Servo_On_Off = new System.Windows.Forms.Button();
+            this.groupBox_Conveyor_Control = new System.Windows.Forms.GroupBox();
+            this.btn_Conveyor_Move_Stop = new System.Windows.Forms.Button();
+            this.btn_Conveyor_Forward_Backward = new System.Windows.Forms.Button();
+            this.btn_Connect = new System.Windows.Forms.Button();
+            this.axDBCommManager1 = new AxDATABUILDERAXLibLB.AxDBCommManager();
             ((System.ComponentModel.ISupportInitialize)(this.Display_Img)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox_Toshiba.SuspendLayout();
@@ -183,6 +190,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.cannyImageBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageBox_Point)).BeginInit();
+            this.groupBox_Conveyor_Control.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.axDBCommManager1)).BeginInit();
             this.SuspendLayout();
             // 
             // Display_Img
@@ -1289,9 +1298,9 @@
             // 
             // RevertToOrigin
             // 
-            this.RevertToOrigin.Location = new System.Drawing.Point(488, 525);
+            this.RevertToOrigin.Location = new System.Drawing.Point(490, 522);
             this.RevertToOrigin.Name = "RevertToOrigin";
-            this.RevertToOrigin.Size = new System.Drawing.Size(85, 23);
+            this.RevertToOrigin.Size = new System.Drawing.Size(83, 23);
             this.RevertToOrigin.TabIndex = 243;
             this.RevertToOrigin.Text = "手臂復歸";
             this.RevertToOrigin.UseVisualStyleBackColor = true;
@@ -1309,9 +1318,9 @@
             // 
             // CalMoveDistance
             // 
-            this.CalMoveDistance.Location = new System.Drawing.Point(394, 525);
+            this.CalMoveDistance.Location = new System.Drawing.Point(394, 521);
             this.CalMoveDistance.Name = "CalMoveDistance";
-            this.CalMoveDistance.Size = new System.Drawing.Size(88, 23);
+            this.CalMoveDistance.Size = new System.Drawing.Size(83, 23);
             this.CalMoveDistance.TabIndex = 241;
             this.CalMoveDistance.Text = "位移計算";
             this.CalMoveDistance.UseVisualStyleBackColor = true;
@@ -1409,9 +1418,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(656, 553);
+            this.button1.Location = new System.Drawing.Point(394, 552);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(105, 42);
+            this.button1.Size = new System.Drawing.Size(83, 23);
             this.button1.TabIndex = 252;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
@@ -1528,11 +1537,75 @@
             this.imageBox_Point.Visible = false;
             this.imageBox_Point.MouseDown += new System.Windows.Forms.MouseEventHandler(this.imageBox_Point_MouseDown);
             // 
+            // btn_Conveyor_Servo_On_Off
+            // 
+            this.btn_Conveyor_Servo_On_Off.Location = new System.Drawing.Point(15, 60);
+            this.btn_Conveyor_Servo_On_Off.Name = "btn_Conveyor_Servo_On_Off";
+            this.btn_Conveyor_Servo_On_Off.Size = new System.Drawing.Size(75, 23);
+            this.btn_Conveyor_Servo_On_Off.TabIndex = 261;
+            this.btn_Conveyor_Servo_On_Off.Text = "Servo On";
+            this.btn_Conveyor_Servo_On_Off.UseVisualStyleBackColor = true;
+            this.btn_Conveyor_Servo_On_Off.Click += new System.EventHandler(this.btn_Conveyor_Servo_On_Off_Click);
+            // 
+            // groupBox_Conveyor_Control
+            // 
+            this.groupBox_Conveyor_Control.Controls.Add(this.btn_Connect);
+            this.groupBox_Conveyor_Control.Controls.Add(this.btn_Conveyor_Move_Stop);
+            this.groupBox_Conveyor_Control.Controls.Add(this.btn_Conveyor_Forward_Backward);
+            this.groupBox_Conveyor_Control.Controls.Add(this.btn_Conveyor_Servo_On_Off);
+            this.groupBox_Conveyor_Control.Location = new System.Drawing.Point(683, 488);
+            this.groupBox_Conveyor_Control.Name = "groupBox_Conveyor_Control";
+            this.groupBox_Conveyor_Control.Size = new System.Drawing.Size(200, 111);
+            this.groupBox_Conveyor_Control.TabIndex = 262;
+            this.groupBox_Conveyor_Control.TabStop = false;
+            this.groupBox_Conveyor_Control.Text = "輸送帶控制";
+            // 
+            // btn_Conveyor_Move_Stop
+            // 
+            this.btn_Conveyor_Move_Stop.Location = new System.Drawing.Point(110, 60);
+            this.btn_Conveyor_Move_Stop.Name = "btn_Conveyor_Move_Stop";
+            this.btn_Conveyor_Move_Stop.Size = new System.Drawing.Size(75, 23);
+            this.btn_Conveyor_Move_Stop.TabIndex = 264;
+            this.btn_Conveyor_Move_Stop.Text = "移動";
+            this.btn_Conveyor_Move_Stop.UseVisualStyleBackColor = true;
+            this.btn_Conveyor_Move_Stop.Click += new System.EventHandler(this.btn_Conveyor_Move_Stop_Click);
+            // 
+            // btn_Conveyor_Forward_Backward
+            // 
+            this.btn_Conveyor_Forward_Backward.Location = new System.Drawing.Point(110, 19);
+            this.btn_Conveyor_Forward_Backward.Name = "btn_Conveyor_Forward_Backward";
+            this.btn_Conveyor_Forward_Backward.Size = new System.Drawing.Size(75, 23);
+            this.btn_Conveyor_Forward_Backward.TabIndex = 262;
+            this.btn_Conveyor_Forward_Backward.Text = "切換：前進";
+            this.btn_Conveyor_Forward_Backward.UseVisualStyleBackColor = true;
+            this.btn_Conveyor_Forward_Backward.Click += new System.EventHandler(this.btn_Conveyor_Forward_Backward_Click);
+            // 
+            // btn_Connect
+            // 
+            this.btn_Connect.Location = new System.Drawing.Point(15, 22);
+            this.btn_Connect.Name = "btn_Connect";
+            this.btn_Connect.Size = new System.Drawing.Size(75, 23);
+            this.btn_Connect.TabIndex = 265;
+            this.btn_Connect.Text = "Connect";
+            this.btn_Connect.UseVisualStyleBackColor = true;
+            this.btn_Connect.Click += new System.EventHandler(this.btn_Connect_Click);
+            // 
+            // axDBCommManager1
+            // 
+            this.axDBCommManager1.Enabled = true;
+            this.axDBCommManager1.Location = new System.Drawing.Point(751, 12);
+            this.axDBCommManager1.Name = "axDBCommManager1";
+            this.axDBCommManager1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axDBCommManager1.OcxState")));
+            this.axDBCommManager1.Size = new System.Drawing.Size(24, 24);
+            this.axDBCommManager1.TabIndex = 263;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1284, 859);
+            this.Controls.Add(this.axDBCommManager1);
+            this.Controls.Add(this.groupBox_Conveyor_Control);
             this.Controls.Add(this.btn_Click_Move);
             this.Controls.Add(this.btn_Get_Point);
             this.Controls.Add(this.imageBox1);
@@ -1625,6 +1698,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.cannyImageBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageBox_Point)).EndInit();
+            this.groupBox_Conveyor_Control.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.axDBCommManager1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1761,6 +1836,12 @@
         private System.Windows.Forms.Button btn_Click_Move;
         private System.Windows.Forms.Label label_Number_Points;
         private Emgu.CV.UI.ImageBox imageBox_Point;
+        private System.Windows.Forms.Button btn_Conveyor_Servo_On_Off;
+        private System.Windows.Forms.GroupBox groupBox_Conveyor_Control;
+        private System.Windows.Forms.Button btn_Conveyor_Move_Stop;
+        private System.Windows.Forms.Button btn_Conveyor_Forward_Backward;
+        private System.Windows.Forms.Button btn_Connect;
+        private AxDATABUILDERAXLibLB.AxDBCommManager axDBCommManager1;
     }
 }
 

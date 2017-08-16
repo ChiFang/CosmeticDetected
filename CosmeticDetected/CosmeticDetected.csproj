@@ -51,6 +51,26 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Emgu.CV">
       <HintPath>..\..\..\..\..\..\..\Emgu\emgucv-windows-universal 3.0.0.2157\bin\Emgu.CV.dll</HintPath>
@@ -73,8 +93,9 @@
     <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="NeptuneClassLibWrap">
-      <HintPath>C:\Program Files\IMI Tech\Neptune\NeptuneClass Library\Bin\x64\NeptuneClassLibWrap.dll</HintPath>
+    <Reference Include="NeptuneClassLibWrap, Version=1.0.5879.21092, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\x86\Debug\NeptuneClassLibWrap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -87,7 +108,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="TsRemoteLib">
-      <HintPath>C:\Users\chao_shinjei\Desktop\SURF_Run0617\SURF_Run\bin\x64\Release\TsRemoteLib.dll</HintPath>
+      <HintPath>bin\x64\Debug\TsRemoteLib.dll</HintPath>
     </Reference>
     <Reference Include="ZedGraph, Version=5.1.5.28844, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -107,6 +128,7 @@
     <Compile Include="ImiTechCamera.cs" />
     <Compile Include="Ini.cs" />
     <Compile Include="ObjectDetector.cs" />
+    <Compile Include="ObjectKVPLC.cs" />
     <Compile Include="ObjectTsRemote.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -137,33 +159,23 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Emgu.CV.Contrib.dll" />
-    <Content Include="Emgu.CV.Cuda.dll" />
-    <Content Include="Emgu.CV.DebuggerVisualizers.VS2010.dll" />
-    <Content Include="Emgu.CV.DebuggerVisualizers.VS2012.dll" />
-    <Content Include="Emgu.CV.DebuggerVisualizers.VS2013.dll" />
-    <Content Include="Emgu.CV.DebuggerVisualizers.VS2015.dll" />
-    <Content Include="Emgu.CV.dll" />
-    <Content Include="Emgu.CV.ML.dll" />
-    <Content Include="Emgu.CV.OCR.dll" />
-    <Content Include="Emgu.CV.Shape.dll" />
-    <Content Include="Emgu.CV.Stitching.dll" />
-    <Content Include="Emgu.CV.Superres.dll" />
-    <Content Include="Emgu.CV.UI.dll" />
-    <Content Include="Emgu.CV.UI.GL.dll" />
-    <Content Include="Emgu.CV.VideoStab.dll" />
-    <Content Include="Emgu.Util.dll" />
-    <Content Include="Neptune1394.dll" />
-    <Content Include="NeptuneClassLibWrap.dll" />
-    <Content Include="NeptuneClassLib_MD_VC100.dll" />
-    <Content Include="NeptuneClassLib_MD_VC80.dll" />
-    <Content Include="NeptuneClassLib_MD_VC90.dll" />
-    <Content Include="NeptuneC_MD_VC100.dll" />
-    <Content Include="NeptuneC_MD_VC80.dll" />
-    <Content Include="NeptuneC_MD_VC90.dll" />
-    <Content Include="NeptuneGigE.dll" />
-    <Content Include="NeptuneUSB3.dll" />
-    <Content Include="simple_grabber.dll" />
+    <COMReference Include="AxDATABUILDERAXLibLB">
+      <Guid>{78ABE6E0-D2A0-4546-9743-7619E303CE23}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>aximp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="DATABUILDERAXLibLB">
+      <Guid>{78ABE6E0-D2A0-4546-9743-7619E303CE23}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
